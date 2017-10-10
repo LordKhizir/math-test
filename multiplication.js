@@ -30,6 +30,7 @@ function newOperation() {
   }
 
   document.getElementById('result').className = 'result result-pending'
+
 }
 
 function processDigit(digit) {
