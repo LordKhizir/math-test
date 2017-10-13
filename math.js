@@ -1,7 +1,8 @@
 var number = [0,1,2];
-var boxContent = [0,1,2]; // 1 is first multiplier, 2 is second multiplier, 0 is result
+var boxContent = [0,1,2]; // 1 is first number, 2 is second number, 0 is result
 var upTo = [0,10,10];
 var guess = 0;
+var operation = 'x';
 var counterOK = 0;
 var counterKO = 0;
 
@@ -13,10 +14,12 @@ initialize();
 function start() {
     upTo[1] = document.getElementById('select-1').value;
     upTo[2] = document.getElementById('select-2').value;
+    operation = document.getElementById('select-operation').value;
     counterOK = 0;
     counterKO = 0;
     writeById('counter-ok',counterOK);
     writeById('counter-ko',counterKO);
+    writeById('operation', operation);
     document.getElementById('play-area').className = '';
     newOperation();
 }
@@ -31,22 +34,22 @@ function getRandomInt(min, max) {
 function newOperation() {
   number[1] = getRandomInt(0,upTo[1]);
   number[2] = getRandomInt(0,upTo[2]);
-  number[0] = number[1] * number[2];
+  switch(operation) {
+    case '+': number[0] = number[1] + number[2];
+      break;
+    case 'x': number[0] = number[1] * number[2];
+        break;
+  }
   guess = 0;
-
   for (var i=0;i<3;i++) {
     boxContent[i] = number[i];
   }
-
   elementToGuess = getRandomInt(0,2);
   boxContent[elementToGuess]='?';
-
   for (var i=0;i<=2;i++) {
     showNumberContent(i,boxContent[i]);
   }
-
   document.getElementById('result').className = 'result pending'
-
 }
 
 function processDigit(digit) {
@@ -54,7 +57,7 @@ function processDigit(digit) {
   showNumberContent(elementToGuess,guess);
   // Same number of digits?
   if (guess.toString().length == number[elementToGuess].toString().length) {
-      processResult(guess==number[elementToGuess] || (number[0]==0 && elementToGuess!=0) );
+      processResult(guess==number[elementToGuess] || (operation=='x' && number[0]==0 && elementToGuess!=0) );
       setTimeout('newOperation()',RESULT_DELAY);
   }
 }
