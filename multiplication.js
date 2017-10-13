@@ -2,6 +2,9 @@ var number = [0,1,2];
 var boxContent = [0,1,2]; // 1 is first multiplier, 2 is second multiplier, 0 is result
 var upTo = [0,10,10];
 var guess = 0;
+var counterOK = 0;
+var counterKO = 0;
+
 const RESULT_DELAY = 1000;
 
 initialize();
@@ -10,7 +13,11 @@ initialize();
 function start() {
     upTo[1] = document.getElementById('select-1').value;
     upTo[2] = document.getElementById('select-2').value;
-    document.getElementById('chalkboard').className = 'chalkboard';
+    counterOK = 0;
+    counterKO = 0;
+    writeById('counter-ok',counterOK);
+    writeById('counter-ko',counterKO);
+    document.getElementById('play-area').className = '';
     newOperation();
 }
 
@@ -38,7 +45,7 @@ function newOperation() {
     showNumberContent(i,boxContent[i]);
   }
 
-  document.getElementById('result').className = 'result result-pending'
+  document.getElementById('result').className = 'result pending'
 
 }
 
@@ -54,9 +61,13 @@ function processDigit(digit) {
 
 function processResult(result) {
   if (result) {
-    document.getElementById('result').className = 'result result-ok'
+    document.getElementById('result').className = 'result ok'
+    counterOK = counterOK + 1;
+    writeById('counter-ok',counterOK);
   } else {
-    document.getElementById('result').className = 'result result-ko'
+    document.getElementById('result').className = 'result ko'
+    counterKO = counterKO + 1;
+    writeById('counter-ko',counterKO);
   }
 }
 
@@ -82,5 +93,9 @@ function addEvent(element, eventName, callback) {
 }
 
 function showNumberContent(index, content) {
-  document.getElementById('number-' + index).innerHTML = content;
+  writeById('number-' + index, content);
+}
+
+function writeById(id,content) {
+  document.getElementById(id).innerHTML = content;
 }
