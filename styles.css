@@ -1,14 +1,31 @@
 @import url(https://fonts.googleapis.com/css?family=Merienda+One);
 
+select {
+  font:2em 'Merienda One', Helvetica, sans-serif;
+}
+
+.chalkboard {
+  background-image: url('images/chalkboard.jpg');
+  margin: auto;
+  background-size:cover;
+  display:block;
+  border: 10px solid brown;
+}
+
+.hidden {
+  display: none;
+}
+
 .operation {
   margin:auto;
   width:90%;
 }
+
 .operand {
   float:left;
   font:10em 'Merienda One', Helvetica, sans-serif;
-  color: rgba(0,0,0,0.7);
-  text-shadow: 3px 3px 3px #fff;
+  color: rgba(255,255,255,1);
+  text-shadow: 3px 3px 3px #eee;
   padding: 2px;
   display: block;
 }

@@ -1,9 +1,18 @@
 var number = [0,1,2];
 var boxContent = [0,1,2]; // 1 is first multiplier, 2 is second multiplier, 0 is result
+var upTo = [0,10,10];
 var guess = 0;
 const RESULT_DELAY = 1000;
 
 initialize();
+
+
+function start() {
+    upTo[1] = document.getElementById('select-1').value;
+    upTo[2] = document.getElementById('select-2').value;
+    document.getElementById('chalkboard').className = 'chalkboard';
+    newOperation();
+}
 
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
@@ -13,8 +22,8 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function newOperation() {
-  number[1] = getRandomInt(0,10);
-  number[2] = getRandomInt(0,10);
+  number[1] = getRandomInt(0,upTo[1]);
+  number[2] = getRandomInt(0,upTo[2]);
   number[0] = number[1] * number[2];
   guess = 0;
 
@@ -38,7 +47,7 @@ function processDigit(digit) {
   showNumberContent(elementToGuess,guess);
   // Same number of digits?
   if (guess.toString().length == number[elementToGuess].toString().length) {
-      processResult(guess==number[elementToGuess]);
+      processResult(guess==number[elementToGuess] || (number[0]==0 && elementToGuess!=0) );
       setTimeout('newOperation()',RESULT_DELAY);
   }
 }
@@ -53,7 +62,6 @@ function processResult(result) {
 
 function initialize() {
   addEvent(window, "keyup", commandKeyPress);
-  newOperation();
 }
 
 function commandKeyPress(e) {
