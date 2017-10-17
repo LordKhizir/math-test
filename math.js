@@ -45,6 +45,7 @@ function newOperation() {
       number[2]++;
     } else {
       if (gotBackOnce==1) {
+          finished = 1;
           alert('¡Completado!')
           return;
       } else {
