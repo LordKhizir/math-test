@@ -46,7 +46,7 @@ function newOperation() {
     } else {
       if (gotBackOnce==1) {
           finished = 1;
-          alert('¡Completado!')
+          alert('Completado!')
           return;
       } else {
         number[1]=0;
@@ -103,7 +103,7 @@ function processResult(result) {
 }
 
 function commandKeyPress(e) {
-  if (finished) return;
+  if (finished==1) return;
   const ASCII_0 = 48;
   const ASCII_9 = 57;
   if(e.which >=ASCII_0 && e.which<=ASCII_9){// NUMBER key pressed
