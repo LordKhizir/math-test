@@ -6,6 +6,7 @@ var operation = 'x';
 var counterOK = 0;
 var counterKO = 0;
 var resultTable;
+var finished = 0;
 
 const RESULT_DELAY = 1000;
 
@@ -14,7 +15,6 @@ initialize();
 function initialize() {
   addEvent(window, "keyup", commandKeyPress);
   upTo[1] = getParameterByName('firstNumber',10);
-  alert(upTo[1]);
   upTo[2] = getParameterByName('secondNumber',10);
   var operationCode = getParameterByName('operation','MULT');
   if (operationCode=='MULT') {
@@ -32,14 +32,12 @@ function initialize() {
   newOperation();
 }
 
-
 function newOperation() {
   number[1] = getRandomInt(0,upTo[1]);
   number[2] = getRandomInt(0,upTo[2]);
   var gotBackOnce = 0;
   // ONLY use this number if it has not been asked yet
   while (resultTable[number[1]][number[2]]!=0) {
-    console.log(number[1] + ',' + number[2]);
     if (number[1]<upTo[1]) {
       number[1]++;
     } else if (number[2]<upTo[2]) {
@@ -47,8 +45,8 @@ function newOperation() {
       number[2]++;
     } else {
       if (gotBackOnce==1) {
-          alert('Se acabó!')
-          break;
+          alert('¡Completado!')
+          return;
       } else {
         number[1]=0;
         number[2]=0;
@@ -56,6 +54,7 @@ function newOperation() {
       }
     }
   }
+
   switch(operation) {
     case '+': number[0] = number[1] + number[2];
       break;
@@ -103,6 +102,7 @@ function processResult(result) {
 }
 
 function commandKeyPress(e) {
+  if (finished) return;
   const ASCII_0 = 48;
   const ASCII_9 = 57;
   if(e.which >=ASCII_0 && e.which<=ASCII_9){// NUMBER key pressed
