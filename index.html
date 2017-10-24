@@ -2,12 +2,48 @@
   <head>
     <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
     <script>
-      function start() {
-        var firstNumber =  document.getElementById('select-1').value;
-        var secondNumber = document.getElementById('select-2').value;
-        var operation = document.getElementById('select-operation').value;
-        var testURL = "math.html?operation=" + operation + '&firstNumber=' + firstNumber + '&secondNumber=' + secondNumber;
-        window.location.href=testURL;
+      function startAdHoc() {
+        var mathTest = {
+          'first' : document.getElementById('select-1').value,
+          'second' : document.getElementById('select-2').value,
+          'operation' : document.getElementById('select-operation').value,
+          'maxSeconds' : '0',
+          'maxOperations' : '0',
+          'removeZeroes' : '0'
+        }
+        runTest(mathTest);
+      }
+      function startFullMultNoTime() {
+        var mathTest = {
+          'first' : '10',
+          'second' : '10',
+          'operation' : 'MULT',
+          'maxSeconds' : '0',
+          'maxOperations' : '0',
+          'removeZeroes' : '0'
+        }
+        runTest(mathTest);
+      }
+      function startMult40in3mins() {
+        var mathTest = {
+          'first' : '10',
+          'second' : '10',
+          'operation' : 'MULT',
+          'maxSeconds' : '180',
+          'maxOperations' : '40',
+          'removeZeroes' : '1'
+        }
+        runTest(mathTest);
+      }
+
+      function runTest(mathTest) {
+        window.location.href='math.html' +
+          '?operation=' + mathTest.operation +
+          '&firstNumber=' + mathTest.first +
+          '&secondNumber=' + mathTest.second +
+          '&maxSeconds=' + mathTest.maxSeconds +
+          '&maxOperations=' + mathTest.maxOperations +
+          '&removeZeroes=' + mathTest.removeZeroes
       }
     </script>
   </head>
@@ -43,7 +79,10 @@
             <option value='MULT' selected>x</option>
             <option value='ADD'>+</option>
         </select>
-        <button id="startButton" onClick="start()">Empezar</button>
+        <button id='startButton' onClick='startAdHoc()'>Empezar</button>
+        <br />
+        <button id='wholeMult' onClick='startFullMultNoTime()'>Tabla de multiplicar completa, sin tiempo</button><br />
+        <button id='mult40in3mins' onClick='startMult40in3mins()'>Tabla de multiplicar, 40 operaciones en 3 minutos, sin 0s</button><br />
     </div>
   </body>
 </html>
