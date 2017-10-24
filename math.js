@@ -66,6 +66,7 @@ function testFinished() {
   if (secondsInterval) {
     clearInterval(secondsInterval);
   }
+  document.getElementById('chalkboard').className='hidden'; //hide
   document.getElementById('results').className='results'; //remove hidden attribute
 }
 
