@@ -78,6 +78,10 @@ select {
   text-align: center;
 }
 
+.results {
+  font:3em 'Merienda One', Helvetica, sans-serif;
+}
+
 .result-table {
   border:1px solid black;
   border-collapse: collapse;

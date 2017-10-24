@@ -9,7 +9,7 @@ var GLOBAL_removeZeroes = 0;
 var counterOK = 0;
 var counterKO = 0;
 var resultTable;
-var finished = 0;
+var GLOBAL_finished = 0;
 var secondsInterval = 0;
 var LAPSE_BETWEEN_OPERATIONS = 400;
 
@@ -33,11 +33,11 @@ function initialize() {
   counterOK = 0;
   counterKO = 0;
   remainingSeconds = maxSeconds;
-  remainingOperations = maxOperations;
+  GLOBAL_remainingOperations = maxOperations;
 
   // UI initialization
   writeById('operation', operation);
-  writeById('counter-operations', remainingOperations);
+  writeById('counter-operations', GLOBAL_remainingOperations);
   writeById('counter-time', remainingSeconds);
   document.getElementById('play-area').className = '';
   generateResultTable(upTo[1],upTo[2]);
@@ -56,8 +56,17 @@ function oneSecondPassed() {
   remainingSeconds--;
   writeById('counter-time', remainingSeconds);
   if (remainingSeconds==0) {
+    testFinished();
+  }
+}
+
+function testFinished() {
+  // Disable intervals, key events, etc
+  GLOBAL_finished = 1;
+  if (secondsInterval) {
     clearInterval(secondsInterval);
   }
+  document.getElementById('results').className='results'; //remove hidden attribute
 }
 
 function newOperation() {
@@ -77,8 +86,7 @@ function newOperation() {
       number[2]++;
     } else {
       if (gotBackOnce==1) {
-          finished = 1;
-          alert('Completado!')
+          testFinished();
           return;
       } else {
         number[1]=0;
@@ -103,18 +111,26 @@ function newOperation() {
   for (var i=0;i<=2;i++) {
     showNumberContent(i,boxContent[i]);
   }
-  document.getElementById('result').className = 'result pending'
 }
 
 function processDigit(digit) {
   guess = guess * 10 + digit;
   showNumberContent(elementToGuess,guess);
   // Same number of digits?
-  if (guess.toString().length == number[elementToGuess].toString().length) {
-      processResult(guess==number[elementToGuess] || (operation=='x' && number[0]==0 && elementToGuess!=0) );
-      remainingOperations--;
-      writeById('counter-operations', remainingOperations);
-      setTimeout('newOperation();',LAPSE_BETWEEN_OPERATIONS); // Leave a little time, just for visual feedback
+  var bypassZero = (operation=='x' && number[0]==0 && elementToGuess!=0);
+  if ((guess.toString().length == number[elementToGuess].toString().length) || bypassZero){
+      processResult(guess==number[elementToGuess] || bypassZero );
+      completedOperation();
+  }
+}
+
+function completedOperation () {
+  GLOBAL_remainingOperations--;
+  writeById('counter-operations', GLOBAL_remainingOperations);
+  if (GLOBAL_remainingOperations==0) {
+    testFinished()
+  } else {
+    setTimeout('newOperation();',LAPSE_BETWEEN_OPERATIONS); // Leave a little time, just for visual feedback
   }
 }
 
@@ -145,7 +161,7 @@ function processResult(result) {
 }
 
 function commandKeyPress(e) {
-  if (finished==1) return;
+  if (GLOBAL_finished==1) return;
   const ASCII_0 = 48;
   const ASCII_9 = 57;
   if(e.which >=ASCII_0 && e.which<=ASCII_9){// NUMBER key pressed
