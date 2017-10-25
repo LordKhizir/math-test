@@ -83,6 +83,7 @@ select {
 
 .keyboard {
   text-align: center;
+  width:100%;
 }
 
 .keyboard button {
