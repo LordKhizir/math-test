@@ -78,6 +78,36 @@ select {
   text-align: center;
 }
 
+.keyboard {
+  text-align: center;
+}
+
+.keyboard button {
+  font:2em 'Merienda One', Helvetica, sans-serif;
+  text-align: center;
+  float:left;
+  margin: 0 5px 5px 0;
+  width: 3em;
+  height: 3em;
+  line-height: 2em;
+  background-color: #ddf;
+  border: 1px solid #aaf;
+  border-radius: 5px;
+}
+
+.keyboard button:hover {
+  background-color: #ccf;
+  cursor: pointer;
+}
+
+.keyboard button.first {
+  clear:left;
+}
+
+.keyboard button.doublewidth {
+  width:6em
+}
+
 .results {
   font:3em 'Merienda One', Helvetica, sans-serif;
 }

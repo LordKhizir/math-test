@@ -43,7 +43,11 @@ function initialize() {
   generateResultTable(upTo[1],upTo[2]);
 
   // set events, timeouts, intervals...
-  addEvent(window, "keyup", commandKeyPress);
+  addEvent(window, "keyup", eventHub);
+  document.querySelectorAll('.keyboard button').forEach(element => {
+    addEvent(element, "click", eventHub);
+  });
+
   if (maxSeconds>0) {
     secondsInterval = setInterval(function() {oneSecondPassed()}, 1000);
   }
@@ -67,7 +71,14 @@ function testFinished() {
     clearInterval(secondsInterval);
   }
   document.getElementById('chalkboard').className='hidden'; //hide
+  document.getElementById('interface').className='hidden'; //hide
   document.getElementById('results').className='results'; //remove hidden attribute
+
+  // Add result analysis
+  var resultsDescription = document.getElementById('result-description');
+  resultsDescription.innerHTML+=
+    'Aciertos:' + counterOK + '<br/>' +
+    'Errores:' + counterKO + '<br/>';
 }
 
 function newOperation() {
@@ -125,6 +136,11 @@ function processDigit(digit) {
   }
 }
 
+function clearGuess() {
+  guess = 0;
+  showNumberContent(elementToGuess,'?');
+}
+
 function completedOperation () {
   GLOBAL_remainingOperations--;
   writeById('counter-operations', GLOBAL_remainingOperations);
@@ -147,13 +163,13 @@ function animateCounter(counterId) {
 function processResult(result) {
   var resultCellKey = 'result-' + number[1] + '-' + number[2];
   if (result) {
-    document.getElementById(resultCellKey).className = 'cell-ok'; // TODO remove
+    document.getElementById(resultCellKey).className = 'cell-ok';
     resultTable[number[1]][number[2]] = 1;
     counterOK = counterOK + 1;
     animateCounter('img-counter-ok');
     writeById('counter-ok',counterOK);
   } else {
-    document.getElementById(resultCellKey).className = 'cell-ko'; // TODO remove
+    document.getElementById(resultCellKey).className = 'cell-ko';
     resultTable[number[1]][number[2]] = -1;
     counterKO = counterKO + 1;
     animateCounter('img-counter-ko');
@@ -161,15 +177,31 @@ function processResult(result) {
   }
 }
 
-function commandKeyPress(e) {
-  if (GLOBAL_finished==1) return;
+function eventHub(e) {
   const ASCII_0 = 48;
   const ASCII_9 = 57;
-  if(e.which >=ASCII_0 && e.which<=ASCII_9){// NUMBER key pressed
-    var digit = e.which - ASCII_0;
-    processDigit(digit);
+  const ASCII_BACKSPACE = 8;
+  if (GLOBAL_finished==1) return;
+  switch (e.type) {
+    case 'keyup':
+      if(e.which >=ASCII_0 && e.which<=ASCII_9){// NUMBER key pressed
+        var digit = e.which - ASCII_0;
+        processDigit(digit);
+      } else if (e.which==ASCII_BACKSPACE){
+        clearGuess();
+      }
+      break;
+    case 'click':
+      var digit = e.srcElement.innerText;
+      if (digit>='0' && digit<='9') {
+        processDigit(parseInt(digit));
+      } else if (digit=='Borrar') {
+        clearGuess();
+      }
+      break;
   }
 }
+
 
 function addEvent(element, eventName, callback) {
     if (element.addEventListener) {
@@ -186,20 +218,20 @@ function showNumberContent(index, content) {
 /* Generate result table, PLUS its representation */
 function generateResultTable(firstNumber, secondNumber) {
   resultTable = new Array(firstNumber);
-  var table = document.getElementById('result-table'); // TODO remove
+  var table = document.getElementById('result-table');
   for (var y=0;y<=firstNumber;y++) {
-    var row = table.insertRow(y);  // TODO remove
+    var row = table.insertRow(y);
     resultTable[y] = new Array(secondNumber);
     for (var x=0;x<=secondNumber;x++) {
-      var cell = row.insertCell(x);  // TODO remove
-      cell.id = 'result-' + y + '-' + x;  // TODO remove
-      cell.innerHTML = y + 'x' + x;  // TODO remove
+      var cell = row.insertCell(x);
+      cell.id = 'result-' + y + '-' + x;
+      cell.innerHTML = y + 'x' + x;
       if (GLOBAL_removeZeroes==1 && (x==0 || y==0)) {
         resultTable[y][x] = -2; // -2 means "NOT ASKED"
-        cell.className = 'cell-notasked'; // TODO remove
+        cell.className = 'cell-notasked';
       } else {
         resultTable[y][x] = 0; // 0 means "not set yet"
-        cell.className = 'cell-pending';  // TODO remove
+        cell.className = 'cell-pending';
       }
     }
   }
