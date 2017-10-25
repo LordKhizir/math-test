@@ -4,6 +4,9 @@ select {
   font:2em 'Merienda One', Helvetica, sans-serif;
 }
 
+#interface {
+    width:100%;
+}
 .chalkboard {
   background-image: url('images/chalkboard.jpg');
   margin: auto;
