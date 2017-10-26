@@ -76,8 +76,8 @@ select {
 }
 
 .counter span {
-  width: 10em;
-  font:5em 'Merienda One', Helvetica, sans-serif;
+  width: 8em;
+  font:4em 'Merienda One', Helvetica, sans-serif;
   text-align: center;
 }
 
