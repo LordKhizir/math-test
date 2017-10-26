@@ -38,9 +38,15 @@ function initialize() {
   // UI initialization
   writeById('operation', operation);
   writeById('counter-operations', GLOBAL_remainingOperations);
-  writeById('counter-time', remainingSeconds);
+  updateTime(remainingSeconds);
   document.getElementById('play-area').className = '';
   generateResultTable(upTo[1],upTo[2]);
+
+  var supportsTouch = ("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0;
+  if (!supportsTouch) {
+    document.querySelector('.keyboard').className = 'hidden';
+  }
+
 
   // set events, timeouts, intervals...
   addEvent(window, "keyup", eventHub);
@@ -58,10 +64,15 @@ function initialize() {
 
 function oneSecondPassed() {
   remainingSeconds--;
-  writeById('counter-time', remainingSeconds);
+  updateTime(remainingSeconds);
   if (remainingSeconds==0) {
     testFinished();
   }
+}
+
+function updateTime(seconds) {
+  var minutesAndSeconds = Math.floor(remainingSeconds/60) + 'm' + (remainingSeconds%60) + 's';
+  writeById('counter-time', minutesAndSeconds);
 }
 
 function testFinished() {
